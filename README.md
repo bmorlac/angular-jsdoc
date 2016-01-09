@@ -121,7 +121,7 @@ Then, run the `jsdoc.js` command with your template. e.g.,
 
 If you want to share your template with others, please send a pull request after adding your template directory where `angular-template` directory is.
 
-The following is the example of directory with explanation;
+The following is the example of directory with explanation:
 
 
     my-template
@@ -136,6 +136,8 @@ The following is the example of directory with explanation;
       │   └── layout.html     # layout file
       └── publish.js          # the main file that generate jsdoc
 
+
+For ease of development you can run `gulp watch --template=my-template` to have the documentation for `sample-codes` automatically build with your template on file changes.
 
 Copyright
 --------
