@@ -3,6 +3,8 @@ var bump = require('gulp-bump');
 var shell = require('gulp-shell');
 var tap = require('gulp-tap');
 var gutil = require('gulp-util');
+var util = require('util');
+var template;
 var bumpVersion = function(type) {
   type = type || 'patch';
   var version = '';
@@ -24,8 +26,26 @@ var bumpVersion = function(type) {
     });
 
 };
+var test = function() {
+  gulp.src('')
+    .pipe(shell([
+      'node node_modules/jsdoc/jsdoc.js '+
+        '--configure common/test_conf.json '+
+        '--template ' + template + ' '+
+        '--destination ' + template + '/docs '+
+        '--readme sample-codes/README.md ' +
+        '--recurse sample-codes '  +
+        '--tutorials sample-codes/tutorials'
+    ], {ignoreErrors: false}));
+};
+var watch = function() {
+  template = gutil.env.template || 'default';
+  gulp.watch([template + '/**/*', '!**/docs/**'], ['test']);
+};
 
 gulp.task('bump',       function() { bumpVersion('patch'); });
 gulp.task('bump:patch', function() { bumpVersion('patch'); });
 gulp.task('bump:minor', function() { bumpVersion('minor'); });
 gulp.task('bump:major', function() { bumpVersion('major'); });
+gulp.task('test',       function() { test(); });
+gulp.task('watch',      function() { watch(); });
