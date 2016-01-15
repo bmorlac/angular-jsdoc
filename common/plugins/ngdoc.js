@@ -1,4 +1,8 @@
 exports.defineTags = function(dictionary) {
+  function hasUrlPrefix(text) {
+    return (/^(http|ftp)s?:\/\//).test(text);
+  }
+
   dictionary.defineTag('ngdoc', {
     mustHaveValue: true,
     onTagged : function(doclet, tag) {
@@ -76,5 +80,42 @@ exports.defineTags = function(dictionary) {
       }
       doclet.newScope = !(s == 'shared scope');
     }
+  });
+
+  dictionary.defineTag('description', {
+    mustHaveValue: true,
+    onTagged: function(doclet, tag) {
+      var helper = require('jsdoc/util/templateHelper');
+
+      // replace inline link tags
+      tag.value = require('jsdoc/tag/inline').replaceInlineTag(tag.value, 'link', function(string, matchedTag) {
+        var match;
+        var longname;
+        var text;
+        var fragmentId;
+        var link;
+
+        if ( hasUrlPrefix(matchedTag.text) ) {
+          match = /(\S+)\s(\S+)/.exec(matchedTag.text);
+          if (match) {
+            longname = match[1];
+            text = match[2] || match[1];
+          }
+        }
+        else {
+          match = /(\S+)#(methods|properties|events)_(\S+)\s(\S+)/.exec(matchedTag.text);
+          if (match) {
+            longname = match[1];
+            text = match[4] || match[3];
+            fragmentId = match[3];
+            helper.registerLink(longname, longname + '.html');
+          }
+        }
+
+        link = helper.linkto(longname, helper.htmlsafe(text), null, fragmentId);
+        return tag.value.replace(new RegExp(require('escape-string-regexp')(matchedTag.completeTag), 'g'), link);
+      }).newString;
+    },
+    synonyms: ['desc']
   });
 };
