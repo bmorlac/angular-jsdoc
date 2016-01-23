@@ -3,7 +3,6 @@ var bump = require('gulp-bump');
 var shell = require('gulp-shell');
 var tap = require('gulp-tap');
 var gutil = require('gulp-util');
-var util = require('util');
 var template;
 var bumpVersion = function(type) {
   type = type || 'patch';
@@ -27,6 +26,7 @@ var bumpVersion = function(type) {
 
 };
 var test = function() {
+  template = gutil.env.template || 'default';
   gulp.src('')
     .pipe(shell([
       'node node_modules/jsdoc/jsdoc.js '+

@@ -28,5 +28,8 @@
     "gulp-shell": "~0.2.7",
     "gulp-tap": "~0.1.1",
     "gulp-util": "~2.2.19"
+  },
+  "peerDependencies": {
+    "escape-string-regexp": "*"
   }
 }
