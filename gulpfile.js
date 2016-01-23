@@ -40,6 +40,7 @@ var test = function() {
 };
 var watch = function() {
   template = gutil.env.template || 'default';
+  gutil.log('Watching folder: ' + template);
   gulp.watch([template + '/**/*', '!**/docs/**'], ['test']);
 };
 
